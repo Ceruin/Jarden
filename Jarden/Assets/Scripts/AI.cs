@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class AI : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class AI : MonoBehaviour
     public float boostPower = 10f;
     Rigidbody body;
 
+    public Transform target;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,9 +21,18 @@ public class AI : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
+    { 
+        
+    }
+
+    public void OnFire()
     {
+        var heading = target.position - this.transform.position;
+        var distance = heading.magnitude;
+        var direction = heading / distance;
+
         // some push force that sends it towards an object
-        body.AddForce(Vector3.up * boostPower, ForceMode.Impulse);
+        body.AddForce(direction * boostPower, ForceMode.Impulse);
     }
 }
