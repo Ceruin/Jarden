@@ -13,6 +13,8 @@ public class AI : MonoBehaviour
     // todo: ai physics (unity? | rigid bodys)
     // todo: ai movement
     // todo: ai consumption
+
+    // potentially use events to dictate actions for the ai, event/UnityEvent
     public float boostPower = 10f;
     Rigidbody body;
 
