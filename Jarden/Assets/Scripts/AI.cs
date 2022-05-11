@@ -42,8 +42,6 @@ public class AI : MonoBehaviour
         //JumpAtTarget();
     }
 
-    object x = new object();
-
     public void JumpAtTarget() {
         if (target == null) { return; }
         var heading = target.position - transform.position;
@@ -52,7 +50,6 @@ public class AI : MonoBehaviour
 
         // some push force that sends it towards an object
         body.AddForce(direction * boostPower, ForceMode.Impulse);
-        //Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 
     Transform GetClosestEnemy(IList<Transform> enemies)
