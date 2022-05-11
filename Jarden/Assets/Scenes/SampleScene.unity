@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 14473830}
   - component: {fileID: 14473831}
   m_Layer: 0
-  m_Name: AI
+  m_Name: Last SamurAI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +235,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boostPower: 1
-  target: {fileID: 1899831341}
+  target: {fileID: 0}
+  detectionRadius: 10
 --- !u!54 &14473830
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -660,7 +661,7 @@ GameObject:
   - component: {fileID: 1899831340}
   - component: {fileID: 1899831339}
   - component: {fileID: 1899831338}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: w
   m_TagString: Untagged
   m_Icon: {fileID: 0}
