@@ -234,9 +234,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cd8c9646039e74b9741f3b6ed5e790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boostPower: 1
+  boostPower: 10
   target: {fileID: 0}
   detectionRadius: 10
+  stateOfAttack: 0
 --- !u!54 &14473830
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -21,19 +21,20 @@ public class AI : MonoBehaviour
     public Transform target;
     public float detectionRadius = 10f;
 
+    public delegate IEnumerator Attacking();
+    public static event Attacking OnAttack;
+
     // Start is called before the first frame update
     void Start()
     {
         body = GetComponent<Rigidbody>();
+        OnAttack += JumpAtTarget;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Check radius for enemy (assign target | circular/potentially only if "aggrod")
-        target = GetClosestEnemy(Physics.OverlapSphere(transform.position, detectionRadius, 1 << LayerMask.NameToLayer("Enemy")).ToList().Select(p => p.transform).ToList());
-        // Jump at enemy (animation+force | play animation, then jump, then landing animation)
-        JumpAtTarget();
+        StartCoroutine(OnAttack());
         // Fix position (animation+ralign | play animation to readjust self, procedural ani?)
         // Wait (arbitrarytime | maybe randomized for fun)
         // Jump is ready (repeat | clear flags/jump lock)
@@ -44,14 +45,34 @@ public class AI : MonoBehaviour
         //JumpAtTarget();
     }
 
-    public void JumpAtTarget() {
-        if (target == null) { return; }
-        var heading = target.position - transform.position;
-        var distance = heading.magnitude;
-        var direction = heading / distance;
+    public enum AttackState
+    {
+        Waiting,
+        Attacking
+    }
 
-        // some push force that sends it towards an object
-        body.AddForce(direction * boostPower, ForceMode.Impulse);
+    public AttackState stateOfAttack = AttackState.Waiting;
+
+    public IEnumerator JumpAtTarget() {
+        if (stateOfAttack == AttackState.Waiting)
+        {
+            // Check radius for enemy (assign target | circular/potentially only if "aggrod")
+            target = GetClosestEnemy(Physics.OverlapSphere(transform.position, detectionRadius, 1 << LayerMask.NameToLayer("Enemy")).ToList().Select(p => p.transform).ToList());
+            if (target == null) { yield return null; }
+            else
+            {
+                stateOfAttack = AttackState.Attacking;
+                // Jump at enemy (animation+force | play animation, then jump, then landing animation)
+                var heading = target.position - transform.position;
+                var distance = heading.magnitude;
+                var direction = heading / distance;
+
+                // some push force that sends it towards an object
+                body.AddForce(direction * boostPower, ForceMode.Impulse);
+                yield return new WaitForSeconds(3);
+                stateOfAttack = AttackState.Waiting;
+            }
+        }
     }
 
     Transform GetClosestEnemy(IList<Transform> enemies)
