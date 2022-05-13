@@ -22,7 +22,7 @@ public class AI : MonoBehaviour
     public float detectionRadius = 10f;
 
     public delegate IEnumerator Attacking();
-    public static event Attacking OnAttack;
+    public event Attacking OnAttack;
 
     // Start is called before the first frame update
     void Start()
