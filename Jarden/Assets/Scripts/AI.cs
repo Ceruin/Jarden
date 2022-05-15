@@ -35,6 +35,7 @@ public class AI : MonoBehaviour
     void FixedUpdate()
     {
         StartCoroutine(OnAttack());
+        Rotate();
         // Fix position (animation+ralign | play animation to readjust self, procedural ani?)
         // Wait (arbitrarytime | maybe randomized for fun)
         // Jump is ready (repeat | clear flags/jump lock)
@@ -49,6 +50,12 @@ public class AI : MonoBehaviour
     {
         Waiting,
         Attacking
+    }
+
+    public void Rotate()
+    {
+        Quaternion q = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
+        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
     }
 
     public AttackState stateOfAttack = AttackState.Waiting;
@@ -72,6 +79,15 @@ public class AI : MonoBehaviour
                 yield return new WaitForSeconds(3);
                 stateOfAttack = AttackState.Waiting;
             }
+        }
+    }
+
+    public bool IsUpright
+    {
+        get {
+            var currentx = transform.rotation.x;
+            var currentz = transform.rotation.z;
+            return currentx == 0 && currentz == 0;
         }
     }
 
