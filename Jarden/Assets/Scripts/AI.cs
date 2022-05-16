@@ -9,6 +9,9 @@ using System;
 
 public class AI : MonoBehaviour
 {
+    // todo: if is touching ground
+    // todo: if is not rotated properly
+    // todo: make ai face enemy when targeting
     // todo: ai (ml agents? | likely just basic ai)
     // todo: ai physics (unity? | rigid bodys)
     // todo: ai movement
