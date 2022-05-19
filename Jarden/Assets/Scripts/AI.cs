@@ -38,10 +38,18 @@ public class AI : MonoBehaviour
     void FixedUpdate()
     {
         StartCoroutine(OnAttack());
-        Rotate();
+        PlayAnimations();
         // Fix position (animation+ralign | play animation to readjust self, procedural ani?)
         // Wait (arbitrarytime | maybe randomized for fun)
         // Jump is ready (repeat | clear flags/jump lock)
+    }
+
+    private void PlayAnimations()
+    {
+        if (Rotate()) { }
+        else AimAt(); { }
+
+        { }
     }
 
     public void OnFire()
@@ -55,10 +63,18 @@ public class AI : MonoBehaviour
         Attacking
     }
 
-    public void Rotate()
+    public bool Rotate()
     {
         Quaternion q = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
         transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
+        return true;
+    }
+
+    public bool AimAt()
+    {
+        Quaternion q = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
+        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
+        return true;
     }
 
     public AttackState stateOfAttack = AttackState.Waiting;
