@@ -46,10 +46,10 @@ public class AI : MonoBehaviour
 
     private void PlayAnimations()
     {
+        // rotation and aiming can happen at the same time
+        // both should only occur once the jar lands
         if (Rotate()) { }
-        else AimAt(); { }
-
-        { }
+        else AimAt(); 
     }
 
     public void OnFire()
