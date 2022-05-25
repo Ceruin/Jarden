@@ -79,8 +79,8 @@ public class AI : MonoBehaviour
     {
         if (target != null)
         {
-            Quaternion q = Quaternion.FromToRotation(transform.forward, target.position) * transform.rotation;
-            transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
+            var qTo = Quaternion.LookRotation(target.transform.position - transform.position);
+            qTo = Quaternion.Slerp(transform.rotation, qTo, 10 * Time.deltaTime);
         }
         return true;
     }
