@@ -34,11 +34,15 @@ public class AI : MonoBehaviour
         OnAttack += JumpAtTarget;
     }
 
+    void Update()
+    {
+        PlayAnimations();
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
         StartCoroutine(OnAttack());
-        PlayAnimations();
         // Fix position (animation+ralign | play animation to readjust self, procedural ani?)
         // Wait (arbitrarytime | maybe randomized for fun)
         // Jump is ready (repeat | clear flags/jump lock)
@@ -48,13 +52,14 @@ public class AI : MonoBehaviour
     {
         // rotation and aiming can happen at the same time
         // both should only occur once the jar lands
-        if (Rotate()) { }
-        else AimAt(); 
+        //Rotate();
+        AimAt();
     }
 
+    // todo: example for oninput
     public void OnFire()
     {
-        //JumpAtTarget();
+        
     }
 
     public enum AttackState
@@ -72,8 +77,11 @@ public class AI : MonoBehaviour
 
     public bool AimAt()
     {
-        Quaternion q = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
-        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
+        if (target != null)
+        {
+            Quaternion q = Quaternion.FromToRotation(transform.forward, target.position) * transform.rotation;
+            transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
+        }
         return true;
     }
 
@@ -94,7 +102,7 @@ public class AI : MonoBehaviour
                 var direction = heading / distance;
 
                 // some push force that sends it towards an object
-                body.AddForce(direction * boostPower, ForceMode.Impulse);
+                //todo: body.AddForce(direction * boostPower, ForceMode.Impulse);
                 yield return new WaitForSeconds(3);
                 stateOfAttack = AttackState.Waiting;
             }

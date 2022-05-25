@@ -381,7 +381,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 54f2863a0a171514c828761e98a9e8a5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -531,6 +531,10 @@ PrefabInstance:
     - target: {fileID: 2354499761660121002, guid: 4be490d8f704093479516464c53ce985, type: 3}
       propertyPath: m_Name
       value: Last SamurAI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2354499761660121004, guid: 4be490d8f704093479516464c53ce985, type: 3}
+      propertyPath: m_Constraints
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2354499761660121006, guid: 4be490d8f704093479516464c53ce985, type: 3}
       propertyPath: m_RootOrder
