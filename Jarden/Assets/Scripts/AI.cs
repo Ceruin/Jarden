@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using DG.Tweening;
 
 public class AI : MonoBehaviour
 {
@@ -20,12 +21,17 @@ public class AI : MonoBehaviour
     // potentially use events to dictate actions for the ai, event/UnityEvent
     public float boostPower = 10f;
     Rigidbody body;
-
     public Transform target;
     public float detectionRadius = 10f;
+    public float roationThreshold = 0.8f;
 
     public delegate IEnumerator Attacking();
     public event Attacking OnAttack;
+
+    private void Awake()
+    {
+        DOTween.Init();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -52,14 +58,14 @@ public class AI : MonoBehaviour
     {
         // rotation and aiming can happen at the same time
         // both should only occur once the jar lands
-        //Rotate();
         AimAt();
+        Rotate();
     }
 
     // todo: example for oninput
     public void OnFire()
     {
-        
+
     }
 
     public enum AttackState
@@ -68,23 +74,39 @@ public class AI : MonoBehaviour
         Attacking
     }
 
-    public bool Rotate()
+    public void Rotate()
     {
-        Quaternion q = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
-        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
-        return true;
+        if (!IsUpright)
+        {
+            Quaternion q = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
+            transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
+        }
     }
+
+    public class Cutie { }
+    public class Us : Cutie { }
+    public static Us You;
 
     public bool AimAt()
     {
-        if (target != null)
+        if (target != null && IsUpright)
         {
-            var qTo = Quaternion.LookRotation(target.transform.position - transform.position);
-            qTo = Quaternion.Slerp(transform.rotation, qTo, 10 * Time.deltaTime);
+            transform.LookAt(target);
+            //Quaternion q = Quaternion.FromToRotation(transform.forward, target.position) * transform.rotation;
+            //transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10);
         }
         return true;
     }
 
+    public bool _isUpright = false;
+    public bool IsUpright { 
+        get 
+        { 
+            _isUpright = transform.up.y > roationThreshold;
+            return _isUpright;
+        } 
+    }
+    
     public AttackState stateOfAttack = AttackState.Waiting;
 
     public IEnumerator JumpAtTarget() {
@@ -96,25 +118,19 @@ public class AI : MonoBehaviour
             else
             {
                 stateOfAttack = AttackState.Attacking;
-                // Jump at enemy (animation+force | play animation, then jump, then landing animation)
-                var heading = target.position - transform.position;
-                var distance = heading.magnitude;
-                var direction = heading / distance;
+                if (IsUpright)
+                {
+                    // Jump at enemy (animation+force | play animation, then jump, then landing animation)
+                    var heading = target.position - transform.position;
+                    var distance = heading.magnitude;
+                    var direction = heading / distance;
 
-                // some push force that sends it towards an object
-                //todo: body.AddForce(direction * boostPower, ForceMode.Impulse);
+                    // some push force that sends it towards an object
+                    body.AddForce(direction * boostPower, ForceMode.Impulse);
+                }
                 yield return new WaitForSeconds(3);
                 stateOfAttack = AttackState.Waiting;
             }
-        }
-    }
-
-    public bool IsUpright
-    {
-        get {
-            var currentx = transform.rotation.x;
-            var currentz = transform.rotation.z;
-            return currentx == 0 && currentz == 0;
         }
     }
 
